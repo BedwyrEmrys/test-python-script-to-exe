@@ -24,30 +24,18 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Display parameters
       run: |
-        if [ "${{ runner.os }}" == "Windows" ]; then
-          echo "Parameter One: %PARAMETER_ONE%"
-          echo "Parameter Two: %$PARAMETER_TWO%"
-        else
-          echo "Parameter One: $PARAMETER_ONE"
-          echo "Parameter Two: $PARAMETER_TWO"
-        fi      
-
-
-    - name: Create parameter file
-      run: |
-        if [ "${{ runner.os }}" == "Windows" ]; then
-        echo "Parameter One: %PARAMETER_ONE%" > parameters.txt
-        echo "Parameter Two: %PARAMETER_TWO%" >> parameters.txt
-        else
-          echo "Parameter One: $PARAMETER_ONE" > parameters.txt
-          echo "Parameter Two: $PARAMETER_TWO" >> parameters.txt
-        fi           
-
-
+        import os
+        print(os.environ['PATH'])
+        para = "Parameter One: $PARAMETER_ONE \nParameter Two: $PARAMETER_TWO"
+        print(para)
+        with open('parameters.txt', 'w') as f:
+            f.write(para)
+      shell: python
+       
     - name: Display parameter file
       run: cat parameters.txt
 

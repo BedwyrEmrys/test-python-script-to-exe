@@ -1,0 +1,31 @@
+name: Build with Parameters
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    env:
+      PARAMETER_ONE: ${{ secrets.PARAMETER_ONE }}
+      PARAMETER_TWO: ${{ secrets.PARAMETER_TWO }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create parameter file
+      run: echo PARAMETER_ONE=${{ env.PARAMETER_ONE }} > parameters.txt && echo PARAMETER_TWO=${{ env.PARAMETER_TWO }} >> parameters.txt
+
+    - name: Display parameter file
+      run: type parameters.txt
+
+    - name: Build
+      run: .\your-build-script.ps1 -ParamFile .\parameters.txt

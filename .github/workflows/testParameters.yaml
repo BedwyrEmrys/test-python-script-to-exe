@@ -28,13 +28,25 @@ jobs:
 
     - name: Display parameters
       run: |
-        echo "Parameter One: $PARAMETER_ONE"
-        echo "Parameter Two: $PARAMETER_TWO"
+        if [ "${{ runner.os }}" == "Windows" ]; then
+          echo "Parameter One: %PARAMETER_ONE%"
+          echo "Parameter Two: %$PARAMETER_TWO%"
+        else
+          echo "Parameter One: $PARAMETER_ONE"
+          echo "Parameter Two: $PARAMETER_TWO"
+        fi      
+
 
     - name: Create parameter file
       run: |
-        echo "Parameter One: $PARAMETER_ONE" > parameters.txt
-        echo "Parameter Two: $PARAMETER_TWO" >> parameters.txt
+        if [ "${{ runner.os }}" == "Windows" ]; then
+        echo "Parameter One: %PARAMETER_ONE%" > parameters.txt
+        echo "Parameter Two: %PARAMETER_TWO%" >> parameters.txt
+        else
+          echo "Parameter One: $PARAMETER_ONE" > parameters.txt
+          echo "Parameter Two: $PARAMETER_TWO" >> parameters.txt
+        fi           
+
 
     - name: Display parameter file
       run: cat parameters.txt

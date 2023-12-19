@@ -1,28 +1,45 @@
 name: BuildwithParameters
-
-# Controls when the workflow will run
 on:
   workflow_dispatch:
+    inputs:
+      parameter_one:
+        description: 'Parameter One'
+        required: true
+      parameter_two:
+        description: 'Parameter Two'
+        required: true
 
 jobs:
   build:
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    env:
-      PARAMETER_ONE: ${{ secrets.PARAMETER_ONE }}
-      PARAMETER_TWO: ${{ secrets.PARAMETER_TWO }}
+        parameter_one: [${{ github.event.inputs.parameter_one }}]
+        parameter_two: [${{ github.event.inputs.parameter_two }}]
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
+
+    - name: Display parameters
+      run: |
+        echo "Parameter One: ${{ matrix.parameter_one }}"
+        echo "Parameter Two: ${{ matrix.parameter_two }}"
 
     - name: Create parameter file
-      run: echo PARAMETER_ONE=${{ env.PARAMETER_ONE }} > parameters.txt && echo PARAMETER_TWO=${{ env.PARAMETER_TWO }} >> parameters.txt
+      run: |
+        echo "Parameter One: ${{ matrix.parameter_one }}" > parameters.txt
+        echo "Parameter Two: ${{ matrix.parameter_two }}" >> parameters.txt
 
     - name: Display parameter file
-      run: type parameters.txt
+      run: cat parameters.txt
 
-    - name: Build
-      run: .\your-build-script.ps1 -ParamFile .\parameters.txt
+    # - name: Build
+    #   run: |
+    #     if [ "$RUNNER_OS" == "Windows" ]; then
+    #       .\your-build-script.bat -ParamFile parameters.txt
+    #     else
+    #       ./your-build-script.sh -ParamFile parameters.txt
+    #     fi

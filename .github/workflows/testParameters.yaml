@@ -11,14 +11,12 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         parameter_one: [${{ github.event.inputs.parameter_one }}]
-        parameter_two: [${{ github.event.inputs.parameter_two }}]
-
+        parameter_two: [${{ github.event.inputs.parameter_two }}]  
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2

@@ -1,4 +1,4 @@
-name: Build with Parameters
+name: Build_with_Parameters
 
 on:
   workflow_dispatch:
